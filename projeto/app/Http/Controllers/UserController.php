@@ -2,37 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     // US.1
     public function index()
     {
-        //
-    }
+        $users = DB::table('users')->count();
+        $accounts = DB::table('accounts')->count();
+        $movements = DB::table('movements')->count();
 
-    // Formulário para registar US.2
-    public function create()
-    {
-        //
-    }
-    // Acção de registar
-    public function store(Request $request)
-    {
-        //
-    }
-
-    //render login
-    public function renderLogin()
-    {
-        //
-    }
-
-    //submissao login (US.3)
-    public function login(Request $request)
-    {
-        //
+        return view('users.index', compact('users', 'movements', 'accounts'));
     }
 
     //render password

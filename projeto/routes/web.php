@@ -11,25 +11,16 @@
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
-
+*/
 // US.1
-//Route::get('/', 'UserController@index')->name('users.index');
-
-// Formulário para registar US.2
-Route::get('register', 'UserController@create')->name('users.create');
-// Acção de registar
-Route::post('register', 'UserController@store')->name('users.store');
-
-// Formulário para login
-Route::get('login', 'UserController@renderLogin')->name('users.renderLogin');
-// Acção de login US.3
-Route::post('login', 'UserController@login')->name('users.login');
+Route::get('/', 'UserController@index')->name('users.index');
 
 // Listagem US.5/6
-Route::get('users', 'AdminController@index')->name('admins.index');
+Route::get('users', 'AdminController@index')->name('admins.index')->middleware('admin');
 
 // Atualizacao dos users US.7
 Route::patch('users/{user}/block', 'AdminController@block')->name('admins.block');
@@ -102,7 +93,7 @@ Route::post('me/associates', 'UserController@storeAssociate')->name('users.store
 Route::delete('me/associates/{user}', 'UserController@destroyAssociate')->name('users.destroyAssociate');
 
 
+Auth::routes();
 
-
-
+Route::get('/home', 'HomeController@index')->name('home');
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -49,11 +51,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'name' => 'required|regex:/^[\pL\s]+$/u|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:3|confirmed',
-            'phone' => 'nullable',
-            'profile_photo' => 'nullable',
+            'phone' => 'nullable|regex:/^(?=.*[0-9])[ +0-9]+$/',
+            'profile_photo' => 'nullable|mimes:png,jpeg,jpg'
         ]);
     }
 
@@ -65,12 +67,30 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
+
+       if (isset($data['phone'])){
+           return User::create(['name' => $data['name'],
+               'email' => $data['email'],
+               'phone' => $data['phone'],
+               'password' => Hash::make($data['password'])]);
+       }else if(isset($data['profile_photo'])){
+           //dd($data['profile_photo']);
+           $path = $data['profile_photo']->store('profiles', 'public');
+           $splitName = explode('/', $path);
+           $photo = $splitName[1];
+           return User::create(['name' => $data['name'],
+               'email' => $data['email'],
+               'profile_photo' => $photo,
+               'password' => Hash::make($data['password'])]);
+       } else if(isset($data['phone']) && isset($data['profile_photo'])) {
+           return User::create(['name' => $data['name'],
+               'email' => $data['email'],
+               'phone' => $data['phone'],
+               'profile_photo' => $data['profile_photo'],
+               'password' => Hash::make($data['password'])]);
+       }
+         return User::create(['name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'phone' => $data['phone'],
-            'profile_photo' => $data['profile_photo'],
-        ]);
+            'password' => Hash::make($data['password'])]);
     }
 }

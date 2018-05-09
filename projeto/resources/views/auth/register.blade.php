@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register')}}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -64,7 +64,7 @@
                             <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Phone') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}" required autofocus>
+                                <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}" autofocus>
 
                                 @if ($errors->has('phone'))
                                     <span class="invalid-feedback">
@@ -77,7 +77,7 @@
                             <label for="profile_photo" class="col-md-4 col-form-label text-md-right">{{ __('Photo') }}</label>
 
                             <div class="col-md-6">
-                                <input id="profile_photo" type="file" class="form-control-file{{ $errors->has('photo') ? ' is-invalid' : '' }}" name="profile_photo" value="{{ old('photo') }}" required autofocus>
+                                <input id="profile_photo" type="file" class="form-control-file{{ $errors->has('photo') ? ' is-invalid' : '' }}" name="profile_photo" value="{{ old('photo') }}" autofocus>
 
                                 @if ($errors->has('profile_photo'))
                                     <span class="invalid-feedback">

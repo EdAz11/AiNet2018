@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'profile_photo'
+        'name', 'email', 'password', 'phone', 'profile_photo',
     ];
 
     /**
@@ -26,4 +26,31 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function adminToStr()
+    {
+        switch ($this->admin) {
+            case '1':
+                return 'Admin';
+            case false:
+                return 'Normal';
+        }
+        return 'Unknown';
+    }
+
+    public function blockedToStr()
+    {
+        switch ($this->blocked) {
+            case true:
+                return 'Blocked';
+            case false:
+                return '';
+        }
+        return 'Unknown';
+    }
+
+    public function isAdmin()
+    {
+        return $this->admin == '1';
+    }
 }

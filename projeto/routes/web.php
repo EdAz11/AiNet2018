@@ -11,16 +11,11 @@
 |
 */
 
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
 // US.1
 Route::get('/', 'UserController@index')->name('users.index');
 
 // Listagem US.5/6
-Route::get('users', 'AdminController@index')->name('admins.index')->middleware('admin');
+Route::get('users', 'AdminController@index')->name('admins.index');
 
 // Atualizacao dos users US.7
 Route::patch('users/{user}/block', 'AdminController@block')->name('admins.block');
@@ -31,7 +26,7 @@ Route::patch('users/{user}/demote', 'AdminController@demote')->name('admins.demo
 // Formulário para pass
 Route::get('me/password', 'UserController@renderPassword')->name('users.renderPassword');
 // Atualizaçao da pass US.9
-Route::patch('me/password', 'UserController@password')->name('users.password');
+Route::patch('me/password', 'UserController@password')->name('users.password')->middleware('auth');
 
 // Formulário para perfil
 Route::get('me/profile', 'ProfileController@renderProfile')->name('profile.render');

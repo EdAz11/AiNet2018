@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'profile_photo',
+        'name', 'email', 'password', 'phone', 'profile_photo', 'password',
     ];
 
     /**
@@ -24,13 +24,20 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'remember_token',
     ];
+
+
+    // A user may have 0 or more associate members
+    public function associateMembers(){
+        return $this->hasMany('App\AssociateMember', 'main_user_id');
+    }
+
 
     public function adminToStr()
     {
         switch ($this->admin) {
-            case '1':
+            case true:
                 return 'Admin';
             case false:
                 return 'Normal';
@@ -42,7 +49,7 @@ class User extends Authenticatable
     {
         switch ($this->blocked) {
             case true:
-                return 'Blocked';
+                return 'blocked';
             case false:
                 return '';
         }
@@ -51,11 +58,15 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->admin == '1';
+        return $this->admin == true;
     }
 
+<<<<<<< HEAD
     public function accounts()
     {
         return $this->hasMany('App\Account', 'owner_id');
     }
+=======
+
+>>>>>>> 76b8ca372b7bf9d7f4b86aa97efcec64fd739542
 }

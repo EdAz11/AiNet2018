@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePasswordRequest;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -22,13 +24,21 @@ class UserController extends Controller
     //render password
     public function renderPassword()
     {
-        //
+        return view('users.profiles.passwordUpdate');
     }
 
     //submissao password (US.9)
-    public function password(Request $request)
+    public function password(UpdatePasswordRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['password'] = Hash::make($data['password']);
+        $user = Auth::user();
+
+        $user->fill($data);
+        $user->save();
+        return redirect()
+            ->route('profiles')
+            ->with('success', 'User saved successfully');
     }
 
     //Dashboard US.26

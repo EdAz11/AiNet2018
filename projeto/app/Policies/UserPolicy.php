@@ -13,4 +13,23 @@ class UserPolicy
     {
         return $user->isAdmin();
     }
+
+    public function block(User $user, User $model)
+    {
+        return $user->isAdmin() && $user->id != $model->id;
+    }
+
+    public function unblock(User $user, User $model)
+    {
+        return $user->isAdmin() && $user->id != $model->id;
+    }
+
+    public function promote(User $user, User $model)
+    {
+        return $user->isAdmin() && $user->id != $model->id;
+    }
+    public function demote(User $user, User $model)
+    {
+        return $user->isAdmin() && $user->id != $model->id;
+    }
 }

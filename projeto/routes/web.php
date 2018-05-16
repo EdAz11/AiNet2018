@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::get('/', 'UserController@index')->name('users.index');
 
 // Listagem US.5/6
-Route::get('users', 'AdminController@index')->name('admins.index')->middleware('admin');
+Route::get('users', 'AdminController@index')->name('admins.index');
 
 // Atualizacao dos users US.7
 Route::patch('users/{user}/block', 'AdminController@block')->name('admins.block');
@@ -91,7 +91,6 @@ Route::post('me/associates', 'UserController@storeAssociate')->name('users.store
 
 //destroyAssociate US.30
 Route::delete('me/associates/{user}', 'UserController@destroyAssociate')->name('users.destroyAssociate');
-
 
 Auth::routes();
 

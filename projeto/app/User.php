@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->admin == '1';
     }
+
+    public function accounts()
+    {
+        return $this->hasMany('App\Account', 'owner_id');
+    }
 }

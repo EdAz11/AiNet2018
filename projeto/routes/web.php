@@ -39,7 +39,7 @@ Route::get('profiles', 'ProfileController@profiles')->name('profiles');
 //Associados US.12
 Route::get('me/associates', 'ProfileController@associates')->name('profile.associates');
 //Associados US.13
-Route::get('me/associates-of', 'ProfileController@associatesOf')->name('profile.associatesOf');
+Route::get('me/associate-of', 'ProfileController@associatesOf')->name('profile.associatesOf');
 
 //Accounts US.14
 Route::get('accounts/{user}', 'AccountController@accountsIndex')->name('accounts');
@@ -86,6 +86,7 @@ Route::post('me/associates', 'UserController@storeAssociate')->name('users.store
 
 //destroyAssociate US.30
 Route::delete('me/associates/{user}', 'UserController@destroyAssociate')->name('users.destroyAssociate');
+
 
 Auth::routes();
 

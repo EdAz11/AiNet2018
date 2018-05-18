@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\AssociateMember;
 use App\Http\Requests\UpdateProfileRequest;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
-    //render profile
     /**
      * ProfileController constructor.
      */
@@ -48,40 +48,51 @@ class ProfileController extends Controller
     }
 
     //Profiles (US.11)
-    public function profiles()
+    public function profiles(Request $request)
     {
-        if (empty($_GET)) {
-            $users = User::all();
-            return view('users.profiles.profiles', compact('users'));
+        $query = User::query();
+
+        if ($request->has('name')){
+            $name = $request->input('name');
+            $query = $query->where('name', 'like', '%' . $name . '%');
         }
 
-        if (isset($_GET['name'])) {
-            $users = $this->name();
-            return view('users.profiles.profiles', compact('users'));
-        }
+        $users = $query->get();
+
+        return view('users.profiles.profiles', compact('users'));
     }
 
     //Associates (US.12)
     public function associates()
     {
         $userId = Auth::user()->id;
-        $associates = User::find(16)->associateMembers;
-        foreach ($associates as $associate) {
-            $users = User::where('id', '=', $associate->associated_user_id)->get();
-            //dd($users);
+        $users = User::find($userId)->associateMembers;
+        if (count($users)>0){
+            $query = User::query();
+            foreach ($users as $user){
+                $query = $query->orWhere('id', '=', $user->associated_user_id);
+            }
+            $users = $query->get();
+            return view('users.profiles.associate', compact('users'));
         }
+        $users = [];
         return view('users.profiles.associate', compact('users'));
     }
 
-    //Associates-of (US.12)
+    //Associates-of (US.13)
     public function associatesOf()
     {
-        return view('users.profiles.associate-of');
-    }
-
-    private function name()
-    {
-        $name = $_GET['name'];
-        return $users = User::where('name', 'like', '%' . $name . '%')->get();
+        $userId = Auth::user()->id;
+        $users = User::find($userId)->associateMembersOf;
+        if (count($users)>0){
+            $query = User::query();
+            foreach ($users as $user){
+                $query = $query->orWhere('id', '=', $user->main_user_id);
+            }
+            $users = $query->get();
+            return view('users.profiles.associate-of', compact('users'));
+        }
+        $users = [];
+        return view('users.profiles.associate-of', compact('users'));
     }
 }

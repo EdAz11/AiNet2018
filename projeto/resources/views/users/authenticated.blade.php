@@ -5,6 +5,7 @@
 @section('content')
 @can('list', App\User::class)
 @if (count($users))
+    @include('partials.search')
     <table class="table table-striped">
     <thead>
     <tr>
@@ -21,12 +22,36 @@
         <td>{{ $user->email}}</td>
         <td>{{ $user->name}}</td>
         <td>{{ $user->adminToStr()}}</td>
-        <td>{{ $user->blockedToStr()}}</td>
+        <td>{{$user->blockedToStr()}}</td>
         <td>
-            <a class="btn btn-xs btn-primary" href="{{route('admins.block', $user)}}">Block</a>
-            <a class="btn btn-xs btn-primary" href="{{route('admins.unblock', $user)}}">Unblock</a>
-            <a class="btn btn-xs btn-primary" href="{{route('admins.promote', $user)}}">Promote</a>
-            <a class="btn btn-xs btn-primary" href="{{route('admins.demote', $user)}}">Demote</a>
+            @can('block', $user)
+            <form action="{{route('admins.block', $user->id)}}" method="POST" role="form" class="inline">
+                @csrf
+                @method('patch')
+                <button type="submit" class="btn btn-xs btn-primary">Block</button>
+            </form>
+            @endcan
+            @can('unblock', $user)
+            <form action="{{route('admins.unblock', $user->id)}}" method="POST" role="form" class="inline">
+                @method('patch')
+                @csrf
+                <button type="submit" class="btn btn-xs btn-primary">Unblock</button>
+            </form>
+            @endcan
+            @can('promote', $user)
+            <form action="{{route('admins.promote', $user->id)}}" method="POST" role="form" class="inline">
+                @csrf
+                @method('patch')
+                <button type="submit" class="btn btn-xs btn-primary">Promote</button>
+            </form>
+            @endcan
+            @can('demote', $user)
+            <form action="{{route('admins.demote', $user->id)}}" method="POST" role="form" class="inline">
+                @method('patch')
+                @csrf
+                <button type="submit" class="btn btn-xs btn-primary">Demote</button>
+            </form>
+            @endcan
         </td>
     </tr>
     @endforeach

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 
 class AdminController extends Controller
@@ -13,41 +13,37 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
     // Listagem US.5/6
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('list', User::class);
-        if (empty($_GET)) {
-            $users = User::all();
-            return view('users.authenticated', compact('users'));
-        } else {
 
-            $query = User::query();
+        $query = User::query();
 
-            if (isset($_GET['name'])) {
-                $name = $_GET['name'];
-                $query = $query->where('name', 'like', '%' . $name . '%');
-            }
-            if (isset($_GET['type'])) {
-                $type = $_GET['type'];
-                if (strcasecmp($type, 'admin') == 0) {
-                    $query = $query->where('admin', '=', true);
-                } elseif ($type == 'normal') {
-                    $query = $query->where('admin', '=', '');
-                }
-            }
-
-            if (isset($_GET['status'])) {
-                $status = $_GET['status'];
-                if (strcasecmp($status, 'blocked') == 0) {
-                    $query = $query->where('blocked', '=', true);
-                } elseif ($status == '') {
-                    $query = $query->where('blocked', '=', '');
-                }
-            }
-
-            $users = $query->get();
-            return view('users.authenticated', compact('users'));
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $query = $query->where('name', 'like', '%' . $name . '%');
         }
+
+        if ($request->has('type')) {
+            $type = $request->input('type');
+            if (strcasecmp($type, 'admin') == 0) {
+                $query = $query->where('admin', '=', true);
+            } elseif ($type == 'normal') {
+                $query = $query->where('admin', '=', false);
+            }
+        }
+
+        if ($request->has('status')) {
+            $status = $request->input('status');
+            if (strcasecmp($status, 'blocked') == 0) {
+                $query = $query->where('blocked', '=', true);
+            } elseif ($status == 'unblocked') {
+                $query = $query->where('blocked', '=', false);
+            }
+        }
+
+        $users = $query->get();
+        return view('users.authenticated', compact('users'));
     }
 
     // Atualizacao dos users US.7
@@ -101,17 +97,5 @@ class AdminController extends Controller
         return redirect()
             ->route('admins.index')
             ->with('success', 'User demoted successfully');
-    }
-
-    private function status()
-    {
-        $status = $_GET['status'];
-        if (strcasecmp($status, 'blocked') == 0) {
-            return $users = User::where('blocked', '=', true)->get();
-        } elseif ($status == '') {
-            return $users = User::where('blocked', '=', '')->get();
-        }
-
-        return $users = [];
     }
 }

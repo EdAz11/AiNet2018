@@ -30,7 +30,11 @@ class User extends Authenticatable
 
     // A user may have 0 or more associate members
     public function associateMembers(){
-        return $this->hasMany('App\AssociateMember', 'main_user_id');
+        return $this->hasMany('App\AssociateMember', 'main_user_id', 'id');
+    }
+
+    public function associateMembersOf(){
+        return $this->hasMany('App\AssociateMember', 'associated_user_id', 'id');
     }
 
 
@@ -61,12 +65,5 @@ class User extends Authenticatable
         return $this->admin == true;
     }
 
-<<<<<<< HEAD
-    public function accounts()
-    {
-        return $this->hasMany('App\Account', 'owner_id');
-    }
-=======
 
->>>>>>> 76b8ca372b7bf9d7f4b86aa97efcec64fd739542
 }

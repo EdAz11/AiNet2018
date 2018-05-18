@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Account;
 
 class AccountController extends Controller
 {
     // Atualizacao das contas US.14
-    public function accountsIndex(User $user)
+    public function accountsIndex($user)
     {
-       $accounts = User::find($user->id)->accounts;
-       foreach ($accounts as $account) {
-           $type = Account::find($account->account_type_id)->type;
-       }
-       
-       return view('accounts.index', compact('accounts', 'type'));
+        //
     }
 
     // Atualizacao das contas US.14

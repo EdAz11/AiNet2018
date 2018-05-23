@@ -26,7 +26,7 @@ Route::patch('users/{user}/demote', 'AdminController@demote')->name('admins.demo
 // Formulário para pass
 Route::get('me/password', 'UserController@renderPassword')->name('users.renderPassword');
 // Atualizaçao da pass US.9
-Route::patch('me/password', 'UserController@password')->name('users.password')->middleware('auth');
+Route::patch('me/password', 'UserController@password')->name('users.password');
 
 // Formulário para perfil
 Route::get('me/profile', 'ProfileController@renderProfile')->name('profile.render');
@@ -47,16 +47,18 @@ Route::get('accounts/{user}/opened', 'AccountController@opened')->name('account.
 Route::get('accounts/{user}/closed', 'AccountController@closed')->name('account.closed');
 
 //Accounts US.15
-Route::delete('accounts/{account}', 'AccountController@destroyAcc')->name('account.destroy');
-Route::patch('accounts/{account}/close', 'AccountController@closeAcc')->name('account.close');
+Route::delete('account/{account}', 'AccountController@destroyAcc')->name('account.destroy');
+Route::patch('account/{account}/close', 'AccountController@closeAcc')->name('account.close');
 
 //Accounts US.16
-Route::patch('account/{account}/open', 'AccountController@openAcc')->name('account.open');
+Route::patch('account/{account}/reopen', 'AccountController@openAcc')->name('account.open');
 
 //Submissao account US.17
+Route::get('account', 'AccountController@accountRender')->name('account.render');
 Route::post('account', 'AccountController@accountSave')->name('account.save');
 
 //Accounts US.18
+Route::get('account/{account}', 'AccountController@accountEditRender')->name('account.editRender');
 Route::put('account/{account}', 'AccountController@editAccount')->name('account.edit');
 
 //Movements US.20
@@ -65,30 +67,28 @@ Route::get('movements/{account}', 'MovementController@movementsIndex')->name('mo
 //Movements US.21
 Route::get('movements/{account}/create', 'MovementController@create')->name('movements.create');
 Route::post('movements/{account}/create', 'MovementController@store')->name('movements.store');
-Route::get('movements/{account}/{movement}', 'MovementController@edit')->name('movements.edit');
-Route::put('movements/{account}/{movement}', 'MovementController@update')->name('movements.update');
-Route::delete('movements/{account}/{movement}', 'MovementController@destroy')->name('movements.destroy');
+Route::get('movement/{movement}', 'MovementController@edit')->name('movements.edit');
+Route::put('movement/{movement}', 'MovementController@update')->name('movements.update');
+Route::delete('movement/{movement}', 'MovementController@destroy')->name('movements.destroy');
 
 //Store document US.23
+Route::get('documents/{movement}', 'DocumentController@create')->name('documents.create');
 Route::post('documents/{movement}', 'DocumentController@store')->name('documents.store');
 
 //Destroy document US.24
-Route::delete('/documents/{movement}/{document}', 'DocumentController@destroy')->name('documents.destroy');
+Route::delete('/document/{document}', 'DocumentController@destroy')->name('documents.destroy');
 
 //Documents index US.25
-Route::get('documents/{movement}', 'DocumentController@index')->name('documents');
+Route::get('document/{document}', 'DocumentController@download')->name('documents.download');
 
 //Dashboard US.26
 Route::get('me/dashboard', 'UserController@dashboard')->name('users.dashboard');
 
 //storeAssociate US.29
-Route::post('me/associates', 'UserController@storeAssociate')->name('users.storeAssociate');
+Route::post('me/associates', 'ProfileController@storeAssociate')->name('profiles.storeAssociate');
 
 //destroyAssociate US.30
-Route::delete('me/associates/{user}', 'UserController@destroyAssociate')->name('users.destroyAssociate');
-
+Route::delete('me/associates/{user}', 'ProfileController@destroyAssociate')->name('profiles.destroyAssociate');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 

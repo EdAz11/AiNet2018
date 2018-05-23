@@ -23,7 +23,11 @@
                 @foreach ($users as $user)
                     <tr>
                         <td>{{ $user->name}}</td>
-                        <td>{{ $user->profile_photo}}</td>
+                        <td>
+                        @if($user->profile_photo != null)
+                            <a href="{{Storage::url('profiles/'.$user->profile_photo)}}">photo</a>
+                        @endif
+                        </td>
                     </tr>
                 @endforeach
             </table>

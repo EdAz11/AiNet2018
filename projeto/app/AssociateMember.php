@@ -11,10 +11,13 @@ class AssociateMember extends Model
     // Overrides primary key
 
     protected $primaryKey = 'main_user_id';
+
     // Disables auto timestamps
-    public $timestamps = false;
+    public $timestamps = true;
 
     public $incrementing = false;
+
+    public const UPDATED_AT = null;
 
     protected $fillable = [
         'main_user_id', 'associated_user_id'

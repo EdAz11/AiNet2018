@@ -2,23 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Movement;
 use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
-    //Documents index US.25
-    public function index($movement, $document)
+    /**
+     * DocumentController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    //Documents download US.25
+    public function download($document)
     {
         //
     }
 
     //Destroy document US.24
-    public function destroy($movement, $document)
+    public function destroy($document)
     {
         //
     }
 
     //Store document US.23
+    public function create(Movement $movement)
+    {
+        return view('movements.document.add', compact('movement'));
+    }
+
     public function store(Request $request, $movement)
     {
         //

@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Movement;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index');
+    }
+
     // US.1
     public function index()
     {
-        $users = DB::table('users')->count();
-        $accounts = DB::table('accounts')->count();
-        $movements = DB::table('movements')->count();
+        $users = User::count();
+        $accounts = Account::count();
+        $movements = Movement::count();
 
         return view('users.index', compact('users', 'movements', 'accounts'));
     }
@@ -43,18 +49,6 @@ class UserController extends Controller
 
     //Dashboard US.26
     public function dashboard()
-    {
-        //
-    }
-
-    //storeAssociate US.29
-    public function storeAssociate(Request $request)
-    {
-        //
-    }
-
-    //destroyAssociate US.30
-    public function destroyAssociate($user)
     {
         //
     }

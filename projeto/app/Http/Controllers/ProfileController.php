@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AssociateMember;
+use App\Http\Requests\StoreAssociateRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\User;
 use Illuminate\Http\Request;
@@ -94,5 +95,27 @@ class ProfileController extends Controller
         }
         $users = [];
         return view('users.profiles.associate-of', compact('users'));
+    }
+
+
+    //storeAssociate US.29
+    public function storeAssociate(StoreAssociateRequest $request)
+    {
+        $data = $request->validated();
+        $dataAssociateMember['main_user_id'] = Auth::id();
+        $dataAssociateMember['associated_user_id'] = $data['associated_user'];
+        AssociateMember::create($dataAssociateMember);
+        return redirect()
+            ->route('profile.associates')
+            ->with('success', 'Associate added successfully');
+    }
+
+    //destroyAssociate US.30
+    public function destroyAssociate(User $user)
+    {
+        AssociateMember::find(Auth::id())->where('associated_user_id', $user->id)->delete();
+        return redirect()
+            ->route('profile.associates')
+            ->with('success', 'Associate deleted successfully');
     }
 }

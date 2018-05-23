@@ -37,6 +37,10 @@ class User extends Authenticatable
         return $this->hasMany('App\AssociateMember', 'associated_user_id', 'id');
     }
 
+    public function accounts(){
+        return $this->hasMany('App\Account', 'owner_id', 'id');
+    }
+
 
     public function adminToStr()
     {

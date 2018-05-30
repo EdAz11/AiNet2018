@@ -8,6 +8,8 @@
     <p>Número de utilizadores: {{$users}}</p>
     <p>Número de movimentos: {{$movements}}</p>
 </div>
+@if(!Auth::check())
 <a class="btn btn-default" href="{{route('login')}}">Login</a>
 <a class="btn btn-default" href="{{route('register')}}">Register</a>
+@endif
 @endsection

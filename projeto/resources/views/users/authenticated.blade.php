@@ -60,11 +60,13 @@
             @endif
             @endcan
             @can('demote', $user)
+            @if($user->isAdmin())
             <form action="{{route('admins.demote', $user)}}" method="POST" role="form" class="inline">
                 @method('patch')
                 @csrf
                 <button type="submit" class="btn btn-xs btn-primary">Demote</button>
             </form>
+            @endif
             @endcan
         </td>
     </tr>

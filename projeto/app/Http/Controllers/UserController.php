@@ -48,8 +48,8 @@ class UserController extends Controller
     }
 
     //Dashboard US.26
-    public function dashboard()
+    public function dashboard(User $user)
     {
-        //
+        return view('users.dashboard');
     }
 }

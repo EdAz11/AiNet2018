@@ -21,8 +21,16 @@
     <tr>
         <td>{{ $user->email}}</td>
         <td>{{ $user->name}}</td>
-        <td>{{ $user->adminToStr()}}</td>
-        <td>{{$user->blockedToStr()}}</td>
+        @if($user->isAdmin())
+            <td class="user-is-admin">{{ $user->adminToStr()}}</td>
+        @else
+            <td>{{ $user->adminToStr()}}</td>
+        @endif
+        @if($user->isBlocked())
+            <td class="user-is-blocked">{{$user->blockedToStr()}}</td>
+        @else
+            <td>{{$user->blockedToStr()}}</td>
+        @endif
         <td>
             @can('block', $user)
             <form action="{{route('admins.block', $user)}}" method="POST" role="form" class="inline">

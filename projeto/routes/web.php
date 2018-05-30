@@ -76,13 +76,13 @@ Route::get('documents/{movement}', 'DocumentController@create')->name('documents
 Route::post('documents/{movement}', 'DocumentController@store')->name('documents.store');
 
 //Destroy document US.24
-Route::delete('/document/{document}', 'DocumentController@destroy')->name('documents.destroy');
+Route::delete('document/{document}', 'DocumentController@destroy')->name('documents.destroy');
 
 //Documents index US.25
 Route::get('document/{document}', 'DocumentController@download')->name('documents.download');
 
 //Dashboard US.26
-Route::get('me/dashboard', 'UserController@dashboard')->name('users.dashboard');
+Route::get('dashboard/{user}', 'UserController@dashboard')->name('users.dashboard');
 
 //storeAssociate US.29
 Route::post('me/associates', 'ProfileController@storeAssociate')->name('profiles.storeAssociate');

@@ -19,7 +19,7 @@
         <tr>
             <td>{{ $account->code}}</td>
             <td>{{ $account->current_balance}}</td>
-            <td></td>
+            <td>{{ $account->type->name }}</td>
             <td>
                 @if(!$account->trashed())
                 <form action="{{route('account.destroy', $account)}}" method="POST" role="form" class="inline">

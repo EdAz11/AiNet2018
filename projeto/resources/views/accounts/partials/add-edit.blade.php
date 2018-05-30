@@ -28,3 +28,10 @@
             name="description" id="inputPassword"
             value="{{old('description', $account->description)}}"/>
 </div>
+<div class="form-group">
+    <label for="inputDate">Date</label>
+    <input
+            type="text" class="form-control"
+            name="date" id="inputDate"
+            value="{{old('date', $account->date)}}"/>
+</div>

@@ -9,6 +9,8 @@ use App\Http\Requests\UpdateMovementRequest;
 use App\Movement;
 use App\MovementCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\DeclareDeclare;
 
 class MovementController extends Controller
 {
@@ -23,9 +25,9 @@ class MovementController extends Controller
     //Movements US.20
     public function movementsIndex(Account $account)
     {
-        $movements = $account->movements()->orderBy('date', 'desc')->get();
-        $document = 1;
-        return view('movements.index', compact('movements', 'account', 'document'));
+        //$this->authorize('view', $account);
+        $movements = Movement::with('category')->orderBy('date', 'desc')->get();
+        return view('movements.index', compact('movements', 'account'));
     }
 
     //Movements US.21
@@ -42,26 +44,42 @@ class MovementController extends Controller
         $movements = $account->movements()->orderBy('date', 'desc')->first();
         $data = $request->validated();
         $type = MovementCategory::find($data['movement_category_id']);
-        $data['type'] = $type['type'];
-        $data['account_id'] = $account->id;
-        if ($movements != null){
-            $data['start_balance'] = $movements['end_balance'];
-        }else
-            $data['start_balance']= 0;
-        if ($data['type'] == 'expense'){
-            $data['end_balance'] = $data['start_balance'] - $data['value'];
-        } elseif ($data['type'] == 'revenue'){
-            $data['end_balance'] = $data['start_balance'] + $data['value'];
+        $movement['movement_category_id'] = $type['id'];
+        $movement['type'] = $type['type'];
+        $movement['date'] = $data['date'];
+        $movement['account_id'] = $account->id;
+        $movement['value'] = $data['value'];
+
+        if ($request->has('description')){
+            $movement['description'] = $data['description'];
         }
 
-        /*
-        if ($request->has('document_file')){
-            $splitDoc = explode('.',$data['document_file']);
-            $document['type'] = $splitDoc[0];
-            Document::create($document);
+        if ($movements != null){
+            $movement['start_balance'] = $movements['end_balance'];
+        }else
+            $movement['start_balance']= 0;
+
+        if ($movement['type'] == 'expense'){
+            $movement['end_balance'] = $movement['start_balance'] - $movement['value'];
+        } elseif ($movement['type'] == 'revenue'){
+            $movement['end_balance'] = $movement['start_balance'] + $movement['value'];
         }
-        */
-        Movement::create($data);
+
+        if ($request->has('document_file')){
+            $document['type'] = $data['document_file']->getClientOriginalExtension();
+            $document['original_name'] = $data['document_file']->getClientOriginalName();
+            if ($request->has('document_description')){
+                $document['description'] = $data['document_description'];
+            }
+            $document = Document::create($document);
+            $movement['document_id'] = $document->id;
+        }
+
+        $movement = Movement::create($movement);
+
+        if ($request->has('document_file')) {
+            $data['document_file']->storeAs('documents/' . $account->id, $movement->id .'.'.$document['type']);
+        }
 
         return redirect()
             ->route('movements', $account)
@@ -73,6 +91,8 @@ class MovementController extends Controller
     {
         $types = MovementCategory::all();
         $account = Account::find($movement->account_id);
+        //$movement =  Movement::with('document')->where('id', $movement->document_id)->get();
+        //dd($movement);
         return view('movements.edit', compact('types', 'movement', 'account'));
     }
 
@@ -81,11 +101,42 @@ class MovementController extends Controller
     {
         $data = $request->validated();
         $type = MovementCategory::find($data['movement_category_id']);
-        $data['type'] = $type['type'];
-        $movement->fill($data);
+        $account = Account::find($movement->account_id);
+
+        $movementUpdate['movement_category_id'] = $type['id'];
+        $movementUpdate['type'] = $type['type'];
+        $movementUpdate['date'] = $data['date'];
+        $movementUpdate['value'] = $data['value'];
+
+        if ($request->has('description')){
+            $movement['description'] = $data['description'];
+        }
+
+
+        if ($request->has('document_file')){
+            $document['type'] = $data['document_file']->getClientOriginalExtension();
+            $document['original_name'] = $data['document_file']->getClientOriginalName();
+            if ($request->has('document_description')){
+                $document['description'] = $data['document_description'];
+            }
+            $document = Document::create($document);
+            $movementUpdate['document_id'] = $document->id;
+        }
+
+        $docToDelete = Document::find($movement->document_id);
+        Storage::delete('documents/'. $movement->account_id.'/'.$movement->id .'.'.$docToDelete['type']);
+        $movement->document()->delete();
+
+        $movement->fill($movementUpdate);
+
+        if ($request->has('document_file')) {
+            $data['document_file']->storeAs('documents/' . $movement->account_id, $movement->id .'.'.$document['type']);
+        }
+
         $movement->save();
+
         return redirect()
-            ->route('movements', $movement->account())
+            ->route('movements', $account)
             ->with('success', 'Movement updated successfully');
     }
 
@@ -93,6 +144,8 @@ class MovementController extends Controller
     public function destroy(Movement $movement)
     {
         $account = Account::find($movement->account_id);
+        $docToDelete = Document::find($movement->document_id);
+        Storage::delete('documents/'. $movement->account_id.'/'.$movement->id .'.'.$docToDelete['type']);
         $movement->delete();
         return redirect()
             ->route('movements', $account)

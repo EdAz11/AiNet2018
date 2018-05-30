@@ -10,6 +10,7 @@
         @method('put')
         @csrf
         @include('movements.partials.add-edit')
+        @include('movements.partials.document')
         <div class="form-group">
             <button type="submit" class="btn btn-success" name="ok">Save</button>
             <a class="btn btn-default" href="{{route('movements', $account)}}">Cancel</a>

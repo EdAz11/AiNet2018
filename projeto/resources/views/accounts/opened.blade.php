@@ -17,8 +17,7 @@
                 <tr>
                     <td>{{ $account->code}}</td>
                     <td>{{ $account->current_balance}}</td>
-                    <td>
-                    </td>
+                    <td>{{ $account->type->name }}</td>
                 </tr>
             @endforeach
         </table>

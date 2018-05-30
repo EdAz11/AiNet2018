@@ -19,7 +19,7 @@
             <tbody>
             @foreach ($movements as $movement)
                 <tr>
-                    <td></td>
+                    <td>{{ $movement->category->name}}</td>
                     <td>{{ $movement->date}}</td>
                     <td>{{ $movement->value}}</td>
                     <td>{{ $movement->type}}</td>
@@ -30,14 +30,16 @@
                             @csrf
                             <button type="submit" class="btn btn-xs btn-danger">Delete Movement</button>
                         </form>
-                        <form action="{{route('documents.destroy', $movement)}}" method="POST" role="form" class="inline">
+                        <a class="btn btn-xs btn-primary" href="{{route('movements.edit', $movement)}}">Edit</a>
+                        <a class="btn btn-xs btn-primary" href="{{route('documents.create', $movement)}}">New Document</a>
+                        @if($movement->document != null)
+                        <a class="btn btn-xs btn-primary" href="{{route('documents.download', $movement->document)}}">Get Document</a>
+                        <form action="{{route('documents.destroy', $movement->document)}}" method="POST" role="form" class="inline">
                             @method('delete')
                             @csrf
                             <button type="submit" class="btn btn-xs btn-danger">Delete Document</button>
                         </form>
-                        <a class="btn btn-xs btn-primary" href="{{route('movements.edit', $movement)}}">Edit</a>
-                        <a class="btn btn-xs btn-primary" href="{{route('documents.create', $document)}}">New Document</a>
-                        <a class="btn btn-xs btn-primary" href="{{route('documents.download', $document)}}">Get Document</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

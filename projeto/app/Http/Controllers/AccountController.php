@@ -23,14 +23,7 @@ class AccountController extends Controller
     // Atualizacao das contas US.14
     public function accountsIndex(User $user)
     {
-        $accounts = User::find($user->id)->accounts()->withTrashed()->get();
-
-        $query = Type::query();
-        foreach ($accounts as $account) {
-            $query = $query->orWhere('id', '=', $account->account_type_id);
-        }
-        $accountTypes = $query->get();
-        //dd($accountTypes);
+        $accounts = Account::with('type')->withTrashed()->where('owner_id', $user->id)->get();
 
         return view('accounts.index', compact('accounts', 'accountTypes'));
     }
@@ -38,14 +31,15 @@ class AccountController extends Controller
     // Atualizacao das contas US.14
     public function opened(User $user)
     {
-        $accounts = User::find($user->id)->accounts;
+        //$this->authorize('listOpened', $user);
+        $accounts = Account::with('type')->where('owner_id', $user->id)->get();
         return view('accounts.opened', compact('accounts'));
     }
 
     // Atualizacao das contas US.14
     public function closed(User $user)
     {
-        $accounts = Account::onlyTrashed()->where('owner_id', $user->id)->get();
+        $accounts = Account::with('type')->onlyTrashed()->where('owner_id', $user->id)->get();
         return view('accounts.closed', compact('accounts'));
     }
 
@@ -72,8 +66,9 @@ class AccountController extends Controller
     //Accounts US.16
     public function openAcc($account)
     {
-       Account::withTrashed()->findOrfail($account)->restore();
-       return redirect()
+        $this->authorize('reopen', $account);
+        Account::withTrashed()->findOrfail($account)->restore();
+        return redirect()
                 ->route('accounts', Auth::user())
                 ->with('success', 'Account reopened successfully');
     }
@@ -94,7 +89,7 @@ class AccountController extends Controller
         $data['owner_id'] = Auth::id();
 
         if (!$request->has('date')){
-            $dataAccount['date'] = now();
+            $data['date'] = now();
         }
 
         $data['current_balance'] = $data['start_balance'];
@@ -117,6 +112,7 @@ class AccountController extends Controller
 
     public function editAccount(UpdateAccountRequest $request, Account $account)
     {
+        $this->authorize('update', $account);
         $data = $request->validated();
 
         $account->fill($data);

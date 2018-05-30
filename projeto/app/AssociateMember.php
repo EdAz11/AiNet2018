@@ -22,6 +22,8 @@ class AssociateMember extends Model
     protected $fillable = [
         'main_user_id', 'associated_user_id'
     ];
+
+
     // A post always belongs to a user
     public function user(){
         return $this->belongsTo('App\User', 'associated_user_id');

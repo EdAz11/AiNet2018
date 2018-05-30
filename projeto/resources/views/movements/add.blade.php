@@ -6,7 +6,7 @@
     @if ($errors->count() > 0)
         @include('partials.errors')
     @endif
-    <form action="{{route('movements.store', $account)}}" method="post" class="form-group">
+    <form action="{{route('movements.store', $account)}}" method="post" class="form-group" enctype="multipart/form-data">
         @csrf
         @include('movements.partials.add-edit')
         @include('movements.partials.document')

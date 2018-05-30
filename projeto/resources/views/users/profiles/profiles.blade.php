@@ -25,8 +25,22 @@
                         <td>{{ $user->name}}</td>
                         <td>
                         @if($user->profile_photo != null)
-                            <a href="{{Storage::url('profiles/'.$user->profile_photo)}}">photo</a>
+                                {{asset('storage/profiles/'.$user->profile_photo)}}
                         @endif
+                        </td>
+                        <td>
+                        @foreach ($user->associateMembersOf as $userAssociate)
+                            @if($userAssociate->main_user_id == \Illuminate\Support\Facades\Auth::id())
+                                    <span>associate</span>
+                            @endif
+                        @endforeach
+                        </td>
+                        <td>
+                        @foreach ($user->associateMembers as $userAssociateOf)
+                            @if($userAssociateOf->associated_user_id == \Illuminate\Support\Facades\Auth::id())
+                                    <span>associate-of</span>
+                            @endif
+                        @endforeach
                         </td>
                     </tr>
                 @endforeach

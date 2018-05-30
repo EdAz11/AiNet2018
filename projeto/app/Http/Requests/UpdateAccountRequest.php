@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -25,8 +27,11 @@ class UpdateAccountRequest extends FormRequest
     {
         return [
             'account_type_id' => 'required|exists:account_types,id',
-            'code' => 'required|unique:accounts,code',
+            'code' => ['required', Rule::unique('accounts')->where(function ($query) {
+                return $query->where('owner_id', Auth::id());
+            })],
             'start_balance' => 'required|numeric',
+            'date' => 'required|date',
             'description' => 'nullable',
         ];
     }

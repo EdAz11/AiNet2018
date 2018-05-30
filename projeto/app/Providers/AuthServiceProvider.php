@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Account;
+use App\Movement;
 use App\Policies\AccountPolicy;
+use App\Policies\MovementPolicy;
 use App\Policies\UserPolicy;
 use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -17,7 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
-        Account::class=> AccountPolicy::class,
+        Account::class => AccountPolicy::class,
+        Movement::class => MovementPolicy::class,
     ];
 
     /**

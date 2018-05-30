@@ -69,5 +69,10 @@ class User extends Authenticatable
         return $this->admin == true;
     }
 
+    public function isBlocked()
+    {
+        return $this->blocked == true;
+    }
+
 
 }

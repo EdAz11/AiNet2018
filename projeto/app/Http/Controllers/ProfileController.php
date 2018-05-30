@@ -58,7 +58,7 @@ class ProfileController extends Controller
             $query = $query->where('name', 'like', '%' . $name . '%');
         }
 
-        $users = $query->get();
+        $users = $query->with(['associateMembers', 'associateMembersOf'])->get();
 
         return view('users.profiles.profiles', compact('users'));
     }
@@ -111,9 +111,12 @@ class ProfileController extends Controller
     }
 
     //destroyAssociate US.30
-    public function destroyAssociate(User $user)
+    public function destroyAssociate(AssociateMember $user)
     {
-        AssociateMember::find(Auth::id())->where('associated_user_id', $user->id)->delete();
+        //$user->delete();
+        //$userToDelete = AssociateMember::find($user->main_user_id)->where('associated_user_id', $user->associated_user_id);
+        dd($user);
+        //$userToDelete->delete();
         return redirect()
             ->route('profile.associates')
             ->with('success', 'Associate deleted successfully');

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ExceptZero;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMovementRequest extends FormRequest
+class StoreDocumentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,7 @@ class UpdateMovementRequest extends FormRequest
     public function rules()
     {
         return [
-            'movement_category_id' => 'required|exists:movement_categories,id',
-            'date' => 'required|date',
-            'value' => ['required', 'numeric', new ExceptZero],
-            'description' => 'nullable',
-            'document_file' => 'nullable|mimes:pdf,png',
+            'document_file' => 'required|mimes:pdf,png,jpeg',
             'document_description' => 'nullable'
         ];
     }

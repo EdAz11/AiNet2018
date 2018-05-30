@@ -25,11 +25,8 @@ class Account extends Model
         return $this->hasOne('App\Type', 'id', 'account_type_id');
     }
 
-    public function movements(){
+    public function movements()
+    {
         return $this->hasMany('App\Movement', 'account_id', 'id');
-    }
-
-    public function document(){
-        return $this->hasOne('App\Document', 'document_id', 'id');
     }
 }

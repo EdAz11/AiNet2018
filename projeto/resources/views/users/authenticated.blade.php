@@ -33,25 +33,31 @@
         @endif
         <td>
             @can('block', $user)
+            @if(!$user->blockedToStr())
             <form action="{{route('admins.block', $user)}}" method="POST" role="form" class="inline">
                 @csrf
                 @method('patch')
                 <button type="submit" class="btn btn-xs btn-primary">Block</button>
             </form>
+            @endif
             @endcan
             @can('unblock', $user)
+            @if($user->blockedToStr())
             <form action="{{route('admins.unblock', $user)}}" method="POST" role="form" class="inline">
                 @method('patch')
                 @csrf
                 <button type="submit" class="btn btn-xs btn-primary">Unblock</button>
             </form>
+            @endif
             @endcan
             @can('promote', $user)
+            @if(!$user->isAdmin())
             <form action="{{route('admins.promote', $user)}}" method="POST" role="form" class="inline">
                 @csrf
                 @method('patch')
                 <button type="submit" class="btn btn-xs btn-primary">Promote</button>
             </form>
+            @endif
             @endcan
             @can('demote', $user)
             <form action="{{route('admins.demote', $user)}}" method="POST" role="form" class="inline">

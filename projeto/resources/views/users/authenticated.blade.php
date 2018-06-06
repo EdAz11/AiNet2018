@@ -4,8 +4,9 @@
 
 @section('content')
 @can('list', App\User::class)
+@include('partials.search')
 @if (count($users))
-    @include('partials.search')
+    
     <table class="table table-striped">
     <thead>
     <tr>

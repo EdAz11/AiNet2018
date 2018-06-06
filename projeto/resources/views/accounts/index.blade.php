@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'List accounts')
+@section('title', 'List Accounts')
 
 @section('content')
     <a class="btn btn-primary btn-success" href="{{route('account.render')}}">Add Account</a>

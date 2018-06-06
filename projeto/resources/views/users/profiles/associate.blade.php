@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'List users')
+@section('title', 'My Associates')
 
 @section('content')
     @if ($errors->count() > 0)

@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'List users')
+@section('title', 'List Users')
 
 @section('content')
 @can('list', App\User::class)

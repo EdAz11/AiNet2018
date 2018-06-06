@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'List users')
+@section('title', 'Associate of')
 
 @section('content')
     @if (count($users))

@@ -26,7 +26,7 @@ class MovementController extends Controller
     public function movementsIndex(Account $account)
     {
         //$this->authorize('view', $account);
-        $movements = Movement::with('category')->where('account_id', $account->id)->orderBy('date', 'desc')->get();
+        $movements = Movement::where('account_id', $account->id)->with('category')->orderBy('date', 'desc')->get();
         return view('movements.index', compact('movements', 'account'));
     }
 
@@ -91,7 +91,7 @@ class MovementController extends Controller
     {
         $types = MovementCategory::all();
         $account = Account::find($movement->account_id);
-        //$movement_doc =  $movement->with('document')->get();
+        //$movement =  Movement::with('document')->where('id', $movement->document_id)->get();
         //dd($movement);
         return view('movements.edit', compact('types', 'movement', 'account'));
     }

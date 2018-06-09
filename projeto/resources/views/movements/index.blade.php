@@ -24,7 +24,7 @@
                     <td>{{ $movement->value}}</td>
                     <td>{{ $movement->type}}</td>
                     <td>{{ $movement->end_balance}}</td>
-                    <td >
+                    <td>
                             <form action="{{route('movements.destroy', $movement)}}" method="POST" role="form" class="inline">
                             @method('delete')
                             @csrf

@@ -85,7 +85,7 @@ Route::get('document/{document}', 'DocumentController@download')->name('document
 Route::get('dashboard/{user}', 'UserController@dashboard')->name('users.dashboard');
 
 //Dashboard US.27 e US.28
-Route::get('statistics/{user}', 'UserController@revenuesExpenses')->name('statistics');
+Route::get('me/statistics', 'StatisticController@index')->name('statistics');
 
 //storeAssociate US.29
 Route::post('me/associates', 'ProfileController@storeAssociate')->name('profiles.storeAssociate');

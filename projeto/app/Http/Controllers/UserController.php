@@ -50,8 +50,13 @@ class UserController extends Controller
     }
 
     //Dashboard US.26
-    public function dashboard(User $user, $interval1 = null, $interval2 = null)
+    public function dashboard(User $user)
     {
+        
+        return view('users.dashboard');
+    }
+    
+    public function revenuesExpenses(User $user, $interval1 = null, $interval2 = null){
         $lava = new Lavacharts();
         
         $catName = "";

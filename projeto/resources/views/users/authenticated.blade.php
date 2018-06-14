@@ -73,7 +73,7 @@
     </tr>
     @endforeach
 </table>
-    {!! $users->render() !!}
+    {{ $users->render() }}
 @else
 <h2>No users found</h2>
 @endif

@@ -50,7 +50,10 @@ class UserController extends Controller
     //Dashboard US.26
     public function dashboard(User $user)
     {
-        
-        return view('users.dashboard');
+        $this->authorize('viewDashboard', $user);
+        $balances = Account::withTrashed()->where('owner_id', $user->id)->pluck('current_balance');
+        $accounts = Account::where('owner_id', $user->id)->get();
+        $total = $balances->sum();
+        return view('users.dashboard', compact('total', 'accounts', 'balances'));
     }
 }

@@ -32,4 +32,14 @@ class UserPolicy
     {
         return $user->isAdmin() && $user->id != $model->id;
     }
+
+    public function listAccounts(User $user, User $model)
+    {
+        return $user->id == $model->id;
+    }
+
+    public function viewDashboard(User $user, User $model)
+    {
+        return $user->id == $model->id;
+    }
 }

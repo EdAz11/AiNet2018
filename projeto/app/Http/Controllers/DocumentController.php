@@ -21,18 +21,17 @@ class DocumentController extends Controller
     //Documents download US.25
     public function download(Document $document)
     {
-        $movement = Movement::find($document->id);
-        $account = Account::find($movement->id);
-        //Storage::setVisibility('documents/'. $movement->account_id.'/'.$movement->id .'.'.$document->type, 'public');
-        //Storage::download('documents/'. $movement->account_id.'/'.$movement->id .'.'.$document->type);
-        return response()->download('documents/'. $movement->account_id.'/'.$movement->id .'.'.$document->type);
+        $this->authorize('viewDoc', $document);
+        $movement = Movement::where('document_id', $document->id)->firstOrFail();
+        return Storage::download('documents/'. $movement->account_id.'/'.$movement->id .'.'.$document->type, $document->original_name);
     }
 
     //Destroy document US.24
     public function destroy(Document $document)
     {
-        $movement = Movement::find($document->id);
-        $account = Account::find($movement->id);
+        $this->authorize('destroyDoc', $document);
+        $movement = Movement::where('document_id', $document->id)->firstOrFail();
+        $account = Account::find($movement->account_id);
 
 
         $movementUpdate['document_id'] = null;
@@ -40,8 +39,9 @@ class DocumentController extends Controller
         $movement->fill($movementUpdate);
         $movement->save();
 
-
         $document->delete();
+
+        Storage::delete('documents/'. $movement->account_id.'/'.$movement->id .'.'.$document->type, $document->original_name);
 
         return redirect()
             ->route('movements', $account)
@@ -57,6 +57,7 @@ class DocumentController extends Controller
 
     public function store(StoreDocumentRequest $request, Movement $movement)
     {
+        $this->authorize('newDoc', $movement);
         $account = Account::find($movement->account_id);
         $data = $request->validated();
         $document['type'] = $data['document_file']->getClientOriginalExtension();

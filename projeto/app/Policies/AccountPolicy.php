@@ -11,32 +11,45 @@ class AccountPolicy
 {
     use HandlesAuthorization;
 
-    public function delete(Account $user, User $model)
+
+    public function re_open(User $user, Account $account)
     {
-        return $user->id != $model->id; //numero de movementos
+        return $user->id == $account->owner_id;
     }
 
-    public function close(Account $account, User $model)
+    public function close(User $user, Account $account)
     {
-        return $account->owner_id == $model->id; //numero de movementos
+        return $user->id == $account->owner_id;
     }
 
-
-    public function reopen(User $user, Account $account)
+    public function delete(User $user, Account $account)
     {
-        return Auth::id() == $account->owner_id;
+        return $user->id == $account->owner_id;
     }
 
     public function update(User $user, Account $account)
     {
-        return Auth::id() == $account->owner_id;
+        return $user->id == $account->owner_id;
     }
 
+    public function view(User $user, Account $account)
+    {
+        return $user->id == $account->owner_id;
+    }
 
-    /*
+    public function store(User $user, Account $account)
+    {
+        return $user->id == $account->owner_id;
+    }
+
     public function listOpened(Account $account, User $user)
     {
         return $account->owner_id == $user->id;
     }
-    */
+
+    public function viewCreateMovement(User $user, Account $account)
+    {
+        return $user->id == $account->owner_id;
+    }
+
 }

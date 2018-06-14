@@ -24,17 +24,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'remember_token',
+        'remember_token'
     ];
 
 
-    // A user may have 0 or more associate members
     public function associateMembers(){
-        return $this->hasMany('App\AssociateMember', 'main_user_id', 'id');
+        return $this->belongsToMany('App\User', 'associate_members', 'main_user_id', 'associated_user_id')->withPivot('created_at');
     }
 
     public function associateMembersOf(){
-        return $this->hasMany('App\AssociateMember', 'associated_user_id', 'id');
+        return $this->belongsToMany('App\User','associate_members', 'associated_user_id', 'main_user_id');
     }
 
     public function accounts(){
@@ -72,6 +71,11 @@ class User extends Authenticatable
     public function isBlocked()
     {
         return $this->blocked == true;
+    }
+
+    public function isAssociatedOf()
+    {
+        return $this->associateMembersOf()->count() == 0;
     }
 
 

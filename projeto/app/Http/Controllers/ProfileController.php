@@ -58,7 +58,7 @@ class ProfileController extends Controller
             $query = $query->where('name', 'like', '%' . $name . '%');
         }
 
-        $users = $query->with(['associateMembers', 'associateMembersOf'])->get();
+        $users = $query->with(['associateMembers', 'associateMembersOf'])->SimplePaginate(10);
 
         return view('users.profiles.profiles', compact('users'));
     }
@@ -66,34 +66,16 @@ class ProfileController extends Controller
     //Associates (US.12)
     public function associates()
     {
-        $userId = Auth::user()->id;
-        $users = User::find($userId)->associateMembers;
-        if (count($users)>0){
-            $query = User::query();
-            foreach ($users as $user){
-                $query = $query->orWhere('id', '=', $user->associated_user_id);
-            }
-            $users = $query->get();
-            return view('users.profiles.associate', compact('users'));
-        }
-        $users = [];
+        $users = User::find(Auth::id())->associateMembers()->SimplePaginate(10);
+
         return view('users.profiles.associate', compact('users'));
     }
 
     //Associates-of (US.13)
     public function associatesOf()
     {
-        $userId = Auth::user()->id;
-        $users = User::find($userId)->associateMembersOf;
-        if (count($users)>0){
-            $query = User::query();
-            foreach ($users as $user){
-                $query = $query->orWhere('id', '=', $user->main_user_id);
-            }
-            $users = $query->get();
-            return view('users.profiles.associate-of', compact('users'));
-        }
-        $users = [];
+        $users = User::find(Auth::id())->associateMembersOf()->SimplePaginate(10);
+
         return view('users.profiles.associate-of', compact('users'));
     }
 
@@ -102,23 +84,24 @@ class ProfileController extends Controller
     public function storeAssociate(StoreAssociateRequest $request)
     {
         $data = $request->validated();
-        $dataAssociateMember['main_user_id'] = Auth::id();
-        $dataAssociateMember['associated_user_id'] = $data['associated_user'];
-        AssociateMember::create($dataAssociateMember);
+        Auth::user()->associateMembers()->attach($data['associated_user']);
+
         return redirect()
             ->route('profile.associates')
             ->with('success', 'Associate added successfully');
     }
 
     //destroyAssociate US.30
-    public function destroyAssociate(AssociateMember $user)
+    public function destroyAssociate(User $user)
     {
-        //$user->delete();
-        //$userToDelete = AssociateMember::find($user->main_user_id)->where('associated_user_id', $user->associated_user_id);
-        dd($user);
-        //$userToDelete->delete();
-        return redirect()
-            ->route('profile.associates')
-            ->with('success', 'Associate deleted successfully');
+        $users = Auth::user()->associateMembers()->wherePivot('associated_user_id', $user->id)->get();
+        if (count($users) > 0){
+            Auth::user()->associateMembers()->detach($user->id);
+            return redirect()
+                ->route('profile.associates')
+                ->with('success', 'Associate deleted successfully');
+        }
+
+        return abort(404);
     }
 }

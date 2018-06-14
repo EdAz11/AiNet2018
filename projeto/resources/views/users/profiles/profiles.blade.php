@@ -37,14 +37,14 @@
                         </td>
                         <td>
                         @foreach ($user->associateMembersOf as $userAssociate)
-                            @if($userAssociate->main_user_id == \Illuminate\Support\Facades\Auth::id())
+                            @if($userAssociate->pivot->main_user_id == \Illuminate\Support\Facades\Auth::id())
                                     <span>associate</span>
                             @endif
                         @endforeach
                         </td>
                         <td>
                         @foreach ($user->associateMembers as $userAssociateOf)
-                            @if($userAssociateOf->associated_user_id == \Illuminate\Support\Facades\Auth::id())
+                            @if($userAssociateOf->pivot->associated_user_id == \Illuminate\Support\Facades\Auth::id())
                                     <span>associate-of</span>
                             @endif
                         @endforeach
@@ -52,6 +52,7 @@
                     </tr>
                 @endforeach
             </table>
+            {{$users->render()}}
         @else
             <h2>No users found</h2>
         @endif

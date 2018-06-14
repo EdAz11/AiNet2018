@@ -25,14 +25,15 @@ class MovementController extends Controller
     //Movements US.20
     public function movementsIndex(Account $account)
     {
-        //$this->authorize('view', $account);
-        $movements = Movement::where('account_id', $account->id)->with('category')->orderBy('date', 'desc')->get();
+        $this->authorize('view', $account);
+        $movements = Movement::with('category', 'document')->where('account_id', $account->id)->orderBy('date', 'desc')->SimplePaginate(10);
         return view('movements.index', compact('movements', 'account'));
     }
 
     //Movements US.21
     public function create(Account $account)
     {
+        $this->authorize('viewCreateMovement', $account);
         $types = MovementCategory::all();
         $movement = new Movement;
         return view('movements.add', compact('account','types', 'movement'));
@@ -41,6 +42,7 @@ class MovementController extends Controller
     //Movements US.21
     public function store(StoreMovementRequest $request, Account $account)
     {
+        $this->authorize('store', $account);
         $movements = $account->movements()->orderBy('date', 'desc')->first();
         $data = $request->validated();
         $type = MovementCategory::find($data['movement_category_id']);
@@ -89,16 +91,17 @@ class MovementController extends Controller
     //Movements US.21
     public function edit(Movement $movement)
     {
+        $this->authorize('viewEdit', $movement);
         $types = MovementCategory::all();
         $account = Account::find($movement->account_id);
-        //$movement =  Movement::with('document')->where('id', $movement->document_id)->get();
-        //dd($movement);
-        return view('movements.edit', compact('types', 'movement', 'account'));
+        $movement_doc = Movement::with('document')->where('id', $movement->id)->get();
+        return view('movements.edit', compact('types', 'movement', 'account', 'movement_doc'));
     }
 
     //Movements US.21
     public function update(UpdateMovementRequest $request, Movement $movement)
     {
+        $this->authorize('update', $movement);
         $data = $request->validated();
         $type = MovementCategory::find($data['movement_category_id']);
         $account = Account::find($movement->account_id);
@@ -143,6 +146,7 @@ class MovementController extends Controller
     //Movements US.21
     public function destroy(Movement $movement)
     {
+        $this->authorize('delete', $movement);
         $account = Account::find($movement->account_id);
         $docToDelete = Document::find($movement->document_id);
         Storage::delete('documents/'. $movement->account_id.'/'.$movement->id .'.'.$docToDelete['type']);

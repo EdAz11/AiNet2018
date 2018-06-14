@@ -33,6 +33,7 @@
                     <button type="submit" class="btn btn-xs btn-primary">Close</button>
                 </form>
                 <a class="btn btn-xs btn-primary" href="{{route('account.editRender', $account)}}">Edit</a>
+                <a class="btn btn-xs btn-primary" href="{{route('movements', $account)}}">Movements</a>
                 @else
                 <form action="{{route('account.open', $account)}}" method="POST" role="form" class="inline">
                     @method('patch')
@@ -43,6 +44,7 @@
             </td>
         </tr>
         @endforeach
+        {{$accounts->render()}}
     </table>
 @else
     <h2>No accounts found</h2>

@@ -26,7 +26,7 @@ class StoreAssociateRequest extends FormRequest
     public function rules()
     {
         return [
-            'associated_user' => ['bail', 'required', 'exists:users,id', new NotMe]
+            'associated_user' => ['required', 'exists:users,id', new NotMe, new Associated]
         ];
     }
 }

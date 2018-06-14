@@ -24,7 +24,7 @@ class StoreDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'document_file' => 'required|mimes:pdf,png,jpeg',
+            'document_file' => 'required|mimes:pdf,png,jpeg|required_with:document_description',
             'document_description' => 'nullable'
         ];
     }

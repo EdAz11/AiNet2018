@@ -42,7 +42,7 @@ class AdminController extends Controller
             }
         }
 
-        $users = $query->SimplePaginate(8);
+        $users = $query->SimplePaginate(10);
         return view('users.authenticated', compact('users'));
     }
 

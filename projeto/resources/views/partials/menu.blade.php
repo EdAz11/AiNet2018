@@ -8,11 +8,10 @@
     Menu
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    @if(Auth::user()->isAdmin())
     <a href="{{route('accounts', Auth::user())}}" class="btn">My Accounts</a>
-    <a href="{{route('movements', Auth::user())}}" class="btn">My Movements</a>
-    <a href="{{route('admins.index')}}" class="btn">Users</a>
-    @endif
+      @if(Auth::user()->isAdmin())
+      <a href="{{route('admins.index')}}" class="btn">Users</a>
+      @endif
     <a href="{{route('users.renderPassword')}}" class="btn">My Password Update</a>
     <a href="{{route('profile.render')}}" class="btn">My Profile Update</a>
     <a href="{{route('profiles')}}" class="btn">Profiles</a>

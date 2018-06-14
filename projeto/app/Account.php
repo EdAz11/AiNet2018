@@ -29,4 +29,6 @@ class Account extends Model
     {
         return $this->hasMany('App\Movement', 'account_id', 'id');
     }
+
+
 }

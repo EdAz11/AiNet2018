@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Account;
+use App\Document;
 use App\Movement;
 use App\Policies\AccountPolicy;
+use App\Policies\DocumentPolicy;
 use App\Policies\MovementPolicy;
 use App\Policies\UserPolicy;
 use App\User;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Account::class => AccountPolicy::class,
         Movement::class => MovementPolicy::class,
+        Document::class => DocumentPolicy::class,
     ];
 
     /**

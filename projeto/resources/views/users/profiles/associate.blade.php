@@ -14,31 +14,32 @@
         </div>
         <button type="submit" class="btn btn-primary btn-success">Add</button>
     </form>
-        @if (count($users))
-            <table class="table table-striped">
-                <thead>
+    @if (count($users))
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($users as $user)
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($users as $user)
-                    <tr>
-                        <td>{{$user->name}}</td>
-                        <td>{{$user->email}}</td>
-                        <td>
+                    <td>{{$user->name}}</td>
+                    <td>{{$user->email}}</td>
+                    <td>
                         <form action="{{route('profiles.destroyAssociate', $user)}}" method="POST" role="form" class="inline">
                             @method('delete')
                             @csrf
                             <button type="submit" class="btn btn-xs btn-danger">Delete</button>
                         </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        @else
-            <h2>No users found</h2>
-        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+        {{$users->render()}}
+    @else
+        <h2>No users found</h2>
+    @endif
 @endsection

@@ -29,8 +29,8 @@ class StoreMovementRequest extends FormRequest
             'date' => 'required|date',
             'value' => ['required', 'numeric', new ExceptZero],
             'description' => 'nullable',
-            'document_file' => 'nullable|mimes:pdf,png,jpeg',
-            'document_description' => 'nullable',//todo
+            'document_file' => 'nullable|mimes:pdf,png,jpeg|required_with:document_description',
+            'document_description' => 'nullable',
         ];
     }
 }

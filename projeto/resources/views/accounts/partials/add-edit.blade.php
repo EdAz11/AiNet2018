@@ -3,7 +3,7 @@
     <select name="account_type_id" id="inputType" class="form-control">
         <option disabled selected> -- select an option -- </option>
         @foreach($types as $type)
-            <option value="{{$type->id}}">{{$type->name}}</option>
+            <option {{is_selected(old('account_type_id', $type->id), $type->id)}} value="{{$type->id}}">{{$type->name}}</option>
         @endforeach
     </select>
 </div>

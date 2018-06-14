@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\AssociateMember;
+use App\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +28,10 @@ class Associated implements Rule
      */
     public function passes($attribute, $value)
     {
-        return empty(AssociateMember::find(Auth::id())->where('associated_user_id', $value)->get());
+        $users = Auth::user()->associateMembers()->where('associated_user_id', $value)->get();
+        if (count($users)>0)
+            return false;
+        return true;
     }
 
     /**

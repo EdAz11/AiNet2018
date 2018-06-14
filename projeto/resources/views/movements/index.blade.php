@@ -25,25 +25,27 @@
                     <td>{{ $movement->type}}</td>
                     <td>{{ $movement->end_balance}}</td>
                     <td>
-                            <form action="{{route('movements.destroy', $movement)}}" method="POST" role="form" class="inline">
+                        <form action="{{route('movements.destroy', $movement)}}" method="POST" role="form" class="inline">
                             @method('delete')
                             @csrf
                             <button type="submit" class="btn btn-xs btn-danger">Delete Movement</button>
+                        </form>
                         <a class="btn btn-xs btn-primary" href="{{route('movements.edit', $movement)}}">Edit Movement</a>
                         @if($movement->document != null)
-                        <form action="{{route('documents.destroy', $movement->document)}}" method="POST" role="form" class="inline">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-xs btn-danger">Delete Document</button>
-                        </form>
-                        <a class="btn btn-xs btn-primary" href="{{route('documents.download', $movement->document)}}">Get Document</a>
+                            <form action="{{route('documents.destroy', $movement->document)}}" method="POST" role="form" class="inline">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-xs btn-danger">Delete Document</button>
+                            </form>
+                            <a class="btn btn-xs btn-primary" href="{{route('documents.download', $movement->document)}}">Get Document</a>
                         @endif
-                        <a class="btn btn-xs btn-primary" href="{{route('documents.create', $movement)}}">New Document</a>  
+                        <a class="btn btn-xs btn-primary" href="{{route('documents.create', $movement)}}">New Document</a>
                     </td>
                 </tr>
             @endforeach
         </table>
+        {{$movements->render()}}
     @else
-        <h2>No accounts found</h2>
+        <h2>No Movements found</h2>
     @endif
 @endsection
